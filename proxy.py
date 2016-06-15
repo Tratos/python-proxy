@@ -271,7 +271,7 @@ class TheServer:# set a mitmproxy
         virtual = None
         printer = None
         #printer = print_it
-
+        #----------------------------------------------------------------#    
         if forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
             print "virtual upgrade (gateway)"
             forward_to= (forward_to[0], 443)
@@ -295,7 +295,7 @@ class TheServer:# set a mitmproxy
         if forward_to[0] == "59.153.228.75":
             print "virtual upgrade (gateway)"
             forward_to= (forward_to[0], 443)        
-
+        #----------------------------------------------------------------#
         
 
         if forward_to[0] == "212.64.148.246":
@@ -364,7 +364,7 @@ class TheServer:# set a mitmproxy
             forward = ssl.wrap_socket(forward)
             printer = print_it
 
-
+        #--------------------------------------------------------#
         if forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
@@ -379,14 +379,27 @@ class TheServer:# set a mitmproxy
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
             printer = print_it
-            #and forward_to[0]!='184.24.19.66' and forward_to[0]!='23.213.168.151'and forward_to[0]!='184.24.19.110'
-        elif forward_to[1] != 80 :
+
+
+        if forward_to[0] == "23.73.129.91":
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
             printer = print_it
+        if forward_to[0] == "173.223.1.113":
+            print "upgrading to ssl!"
+            forward = ssl.wrap_socket(forward)
+            printer = print_it
+        if forward_to[0] == "59.153.228.75":
+            print "upgrading to ssl!"
+            forward = ssl.wrap_socket(forward)
+            printer = print_it
+            #and forward_to[0]!='184.24.19.66' and forward_to[0]!='23.213.168.151'and forward_to[0]!='184.24.19.110'
+        #--------------------------------------------------------#
+        # elif forward_to[1] != 80 :
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
         #add something here can you see it 
-        
-
         if forward:
             print clientaddr, "has connected"
             self.input_list.append(clientsock)
