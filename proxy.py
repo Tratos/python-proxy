@@ -288,9 +288,9 @@ class TheServer:# set a mitmproxy
             print "virtual upgrade (gateway)"
             forward_to= (forward_to[0], 443)
 
-        if forward_to[0] == "173.223.1.113":
-            print "virtual upgrade (gateway)"
-            forward_to= (forward_to[0], 443)        
+        # if forward_to[0] == "173.223.1.113":
+        #     print "virtual upgrade (gateway)"
+        #     forward_to= (forward_to[0], 443)        
 
         if forward_to[0] == "59.153.228.75":
             print "virtual upgrade (gateway)"
@@ -298,9 +298,9 @@ class TheServer:# set a mitmproxy
         #----------------------------------------------------------------#
         
 
-        if forward_to[0] == "212.64.148.246":
-            forward_to = blazeserver()
-            printer = hex_dump_packet
+        # if forward_to[0] == "212.64.148.246":
+        #     forward_to = blazeserver()
+        #     printer = hex_dump_packet
         
 
         if forward_to[0] == "1.2.1.1":
@@ -384,11 +384,11 @@ class TheServer:# set a mitmproxy
         if forward_to[0] == "23.73.129.91":
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
-            printer = print_it
-        if forward_to[0] == "173.223.1.113":
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
+        #     printer = print_it
+        # if forward_to[0] == "173.223.1.113":
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
         if forward_to[0] == "59.153.228.75":
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
