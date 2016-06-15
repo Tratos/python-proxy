@@ -379,7 +379,7 @@ class TheServer:# set a mitmproxy
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
             printer = print_it
-            and forward_to[0]!='184.24.19.66' and forward_to[0]!='23.213.168.151'and forward_to[0]!='184.24.19.110'
+            #and forward_to[0]!='184.24.19.66' and forward_to[0]!='23.213.168.151'and forward_to[0]!='184.24.19.110'
         elif forward_to[1] != 80 :
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
