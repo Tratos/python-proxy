@@ -284,17 +284,17 @@ class TheServer:# set a mitmproxy
             print "virtual upgrade (gateway)"
             forward_to= (forward_to[0], 443)
 
-        if forward_to[0] == "23.73.129.91":
-            print "virtual upgrade (gateway)"
-            forward_to= (forward_to[0], 443)
+        # if forward_to[0] == "23.73.129.91":
+        #     print "virtual upgrade (gateway)"
+        #     forward_to= (forward_to[0], 443)
 
         # if forward_to[0] == "173.223.1.113":
         #     print "virtual upgrade (gateway)"
         #     forward_to= (forward_to[0], 443)        
 
-        if forward_to[0] == "59.153.228.75":
-            print "virtual upgrade (gateway)"
-            forward_to= (forward_to[0], 443)        
+        # if forward_to[0] == "59.153.228.75":
+        #     print "virtual upgrade (gateway)"
+        #     forward_to= (forward_to[0], 443)        
         #----------------------------------------------------------------#
         
 
@@ -365,15 +365,15 @@ class TheServer:# set a mitmproxy
             printer = print_it
 
         #--------------------------------------------------------#
-        if forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
+        elif forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
             printer = print_it
 
-        if forward_to[0] == "159.153.228.75":#fifa15.service.easports.com
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
+        # elif forward_to[0] == "159.153.228.75":#fifa15.service.easports.com
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
 
         if forward_to[0] == "159.153.103.28":#fifa15.service.easports.com
             print "upgrading to ssl!"
@@ -381,18 +381,18 @@ class TheServer:# set a mitmproxy
             printer = print_it
 
 
-        if forward_to[0] == "23.73.129.91":
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
+        # if forward_to[0] == "23.73.129.91":
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
         #     printer = print_it
         # if forward_to[0] == "173.223.1.113":
         #     print "upgrading to ssl!"
         #     forward = ssl.wrap_socket(forward)
         #     printer = print_it
-        if forward_to[0] == "59.153.228.75":
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
+        # if forward_to[0] == "59.153.228.75":
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
             #and forward_to[0]!='184.24.19.66' and forward_to[0]!='23.213.168.151'and forward_to[0]!='184.24.19.110'
         #--------------------------------------------------------#
         # elif forward_to[1] != 80 :
