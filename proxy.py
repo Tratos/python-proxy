@@ -86,7 +86,8 @@ class Channel:
         else:
             otherend = self.sout
         
-        if self.virtual != None:
+        if self.virtual != None:#I haven't see the message of 'modified data' so this'if' calues maybe never matched yet I guess
+                                #on the other hand it means that the ip of these which has upgrade the virtual has not came in
             if re.match("^(GET|POST|PUT|DELETE|HEAD) .* HTTP/1.1", data):
                 k = data.split("\r\n")
                 a = k[0].split(" ")
@@ -193,7 +194,7 @@ def blazeserver():
     port = int(port)
 
     return (host, port)
-
+#this one(Forward) just set a simple socket.the ssl.wrap_socket will upgrade this socket to a secure socket level 
 class Forward:# create a socekt that connect to the real server
     def __init__(self):
         self.forward = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -216,7 +217,7 @@ class TheServer:# set a mitmproxy
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((host, port))
-        self.server.listen(200)
+        self.server.listen(200)#means it can accept 200 connect in 
 
     def main_loop(self):
         self.input_list.append(self.server)
@@ -247,6 +248,7 @@ class TheServer:# set a mitmproxy
         _, port, a1, a2, a3, a4 = struct.unpack("!HHBBBBxxxxxxxx", odestdata)
         address = "%d.%d.%d.%d" % (a1, a2, a3, a4)
         print('[+] Forwarding incoming connection from %s to %s through the proxy' % (repr(sock.getpeername()), (address, port)))
+        #haha when  connected, it seems that always show this message on the screen so find where it used 
         return (address, port)
         
 
@@ -254,21 +256,24 @@ class TheServer:# set a mitmproxy
     def on_accept(self):
         clientsock, clientaddr = self.server.accept()
         forward_to = self.get_destipport(clientsock)
+        #ok it's here,forget the note on the above, the label of haha
 
         if forward_to[0] == "134.213.69.149":
             forward_to = (forward_to[0], 443)
+        #make a print here and see what happend
 
         if forward_to[0] == "31.13.71.1":
             forward_to[1] = 443
+        #the same as above
 
-        if forward_to[0] == "159.153.244.219":
+        if forward_to[0] == "159.153.244.219":#I don't know what is this ,try to figure out it 
             print "feeding static blaze!"
             self.input_list.append(clientsock)
             nchannel = Channel(None, clientsock, generator=static_blaze)
             self.channel[clientsock] = nchannel
             return
 
-        virtual = None
+        virtual = None#find the useage of this virtual
         printer = None
         #printer = print_it
         #----------------------------------------------------------------#    
@@ -344,9 +349,9 @@ class TheServer:# set a mitmproxy
             forward_to = ("159.153.228.76", 443)
             l = lambda x: "/proxy/identi" + x[1:]
             virtual = (l, "gateway.ea.com")
-
+        #all above seems never used because i nerver see the message of print!just a guess do by a newbie
         if forward_to[1] != 9090:
-            #connect the server end
+            #setup a tcp socket that is connected to the server end
             forward = Forward().start(forward_to[0], forward_to[1])
         else:
             forward = None
@@ -375,7 +380,7 @@ class TheServer:# set a mitmproxy
         #     forward = ssl.wrap_socket(forward)
         #     printer = print_it
 
-        if forward_to[0] == "159.153.103.28":#fifa15.service.easports.com
+        elif forward_to[0] == "159.153.103.28":#fifa15.service.easports.com
             print "upgrading to ssl!"
             forward = ssl.wrap_socket(forward)
             printer = print_it
@@ -444,7 +449,7 @@ class TheServer:# set a mitmproxy
         # here we can parse and/or modify the data before send forward
         #hex_dump_packet(data)
             
-        self.channel[self.s].procdata(self.s, data)
+        self.channel[self.s].procdata(self.s, data)#self.s is in the list of readyinput
 
 if __name__ == '__main__':
         server = TheServer('', 8099)
