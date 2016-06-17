@@ -212,18 +212,19 @@ SO_ORIGINAL_DST = 80
 class TheServer:# set a mitmproxy 
     input_list = []#this list will contains all the socket
     channel = {}# still don't know 
+                # {}is a dictionary in python 
 
     def __init__(self, host, port):#init a socket that listened on the port of 200 this is the base socket 
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((host, port))
-        self.server.listen(200)#means it can accept 200 connect in 
+        self.server.listen(200)#means it can accept 200 connects  
 
     def main_loop(self):
         self.input_list.append(self.server)
         while 1:
             time.sleep(delay)
-            ss = select.select#
+            ss = select.select
             inputready, outputready, exceptready = ss(self.input_list, [], [])
             for self.s in inputready:
                 if self.s == self.server:
@@ -257,38 +258,100 @@ class TheServer:# set a mitmproxy
         clientsock, clientaddr = self.server.accept()
         forward_to = self.get_destipport(clientsock)
         #ok it's here,forget the note on the above, the label of haha
+        # if forward_to[0] == "134.213.69.149":
+        #     forward_to = (forward_to[0], 443)
+        #     print "change the port to 443"
+        # #make a print here and see what happend
 
-        if forward_to[0] == "134.213.69.149":
-            forward_to = (forward_to[0], 443)
-        #make a print here and see what happend
+        # if forward_to[0] == "31.13.71.1":
+        #     forward_to[1] = 443
+        #     print "change the port to 443"
 
-        if forward_to[0] == "31.13.71.1":
-            forward_to[1] = 443
         #the same as above
 
-        if forward_to[0] == "159.153.244.219":#I don't know what is this ,try to figure out it 
-            print "feeding static blaze!"
-            self.input_list.append(clientsock)
-            nchannel = Channel(None, clientsock, generator=static_blaze)
-            self.channel[clientsock] = nchannel
-            return
+        # if forward_to[0] == "159.153.244.219":#I don't know what is this ,try to figure out it 
+        #     print "feeding static blaze!"
+        #     self.input_list.append(clientsock)
+        #     nchannel = Channel(None, clientsock, generator=static_blaze)
+        #     self.channel[clientsock] = nchannel
+        #     return
 
-        virtual = None#find the useage of this virtual
+        virtual = None#find the useage of this virtual 
         printer = None
         #printer = print_it
         #----------------------------------------------------------------#    
-        if forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
-            print "virtual upgrade (gateway)"
-            forward_to= (forward_to[0], 443)
+        upgrade_socket=False
+        ip_list_1=[
+                   "159.153.21.132",#fifa15.service.easports.com
+                   "159.153.228.75",#accounts.ea.com
+                   "159.153.103.28",#reports.tools.gos.ea.com
+                   "104.120.117.43",#fifa15.content.easports.com 
+                   "104.95.201.172"#fifa15.content.easports.com       
+                  ]
+        ip_list_2=[
+                   "134.213.37.203",#utas.s2.fut.ea.com
+                   "104.71.136.11",
+                   "104.95.111.155",#static-resource.np.community.playstation.net
+                   "203.105.78.45",
+                   "23.79.178.172",
+                   "173.230.217.202",
+                   "104.71.136.11",#accounts.ea.com
+                   # "173.230.217.202",
+                   # "159.153.228.75",
+                   # "159.153.121.132",
+                   # "104.95.201.172",
+                   # "159.153.103.28",
+                   # "111.108.54.32",
+                   # "104.95.216.52",
+                   # "134.213.37.203",
+                   # "159.153.21.132",
+                   # "134.213.37.203"#utas.s2.fut.ea.com
+                 ]
 
-        if forward_to[0] == "159.153.228.75":#fifa15.service.easports.com
-            print "virtual upgrade (gateway)"
-            forward_to= (forward_to[0], 443)
+        #printer = print_it 
+        if forward_to[1] != 443:
+            for ip in ip_list_1:
+                if forward_to[0] == ip:
+                    print "virtual upgrade (gateway)"
+                    forward_to= (forward_to[0], 443)
+                    upgrade_socket=True
+                    break                    
+            # if forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
+            #     print "virtual upgrade (gateway)"
+            #     forward_to= (forward_to[0], 443)
+            #     upgrade_socket=True
 
-        if forward_to[0] == "159.153.103.28":#fifa15.service.easports.com
-            print "virtual upgrade (gateway)"
-            forward_to= (forward_to[0], 443)
+            # elif forward_to[0] == "159.153.228.75":#accounts.ea.com
+            #     print "virtual upgrade (gateway)"
+            #     forward_to= (forward_to[0], 443)
+            #     upgrade_socket=True    
 
+            # elif forward_to[0] == "159.153.103.28":#reports.tools.gos.ea.com
+            #     print "virtual upgrade (gateway)"#this is a connect  just send an error report to the server maybe
+            #     forward_to= (forward_to[0], 443)
+            #     upgrade_socket=True
+
+            # elif forward_to[0] == "104.120.117.43":#fifa15.content.easports.com
+            #     print "virtual upgrade (gateway)"
+            #     forward_to= (forward_to[0], 443)
+            #     upgrade_socket=True
+
+
+
+            # elif forward_to[0] == "104.95.201.172":#fifa15.content.easports.com
+            #     print "virtual upgrade (gateway)"
+            #     forward_to= (forward_to[0], 443)
+            #     upgrade_socket=True
+            #upgrade_socket=True
+        # elif forward_to[0]=="134.213.37.203":#utas.s2.fut.ea.com
+        #     printer = print_it# print the message of this packet which ip is 134.213.37.203
+        #     upgrade_socket=True#when this is True something happened,not real login ,try and try again
+        for ip in ip_list_2:
+            if forward_to[0] == ip:
+                printer = None# print the message of this packet which ip is 134.213.37.203
+                upgrade_socket=False#when modify the memory should set this as True
+                break
+        #173.230.217.202
         # if forward_to[0] == "23.73.129.91":
         #     print "virtual upgrade (gateway)"
         #     forward_to= (forward_to[0], 443)
@@ -308,81 +371,85 @@ class TheServer:# set a mitmproxy
         #     printer = hex_dump_packet
         
 
-        if forward_to[0] == "1.2.1.1":
-            print "virtual upgrade "
-            forward_to = ("159.153.228.75", 443)
-            l = lambda x: "/connect/token"
-            virtual = (l, "accounts.ea.com")
-            printer = print_it
+        # if forward_to[0] == "1.2.1.1":
+        #     print "virtual upgrade "
+        #     forward_to = ("159.153.228.75", 443)
+        #     l = lambda x: "/connect/token"
+        #     virtual = (l, "accounts.ea.com")
+        #     printer = print_it
 
-        if forward_to[0] == "1.2.1.2":
-            print "virtual upgrade "
-            forward_to = ("159.153.228.75", 443)
-            virtual = (uri_connect_auth1, "accounts.ea.com")
-            printer = print_it
+        # if forward_to[0] == "1.2.1.2":
+        #     print "virtual upgrade "
+        #     forward_to = ("159.153.228.75", 443)
+        #     virtual = (uri_connect_auth1, "accounts.ea.com")
+        #     printer = print_it
 
-        if forward_to[0] == "1.2.1.2":
-            print "virtual upgrade "
-            forward_to = ("159.153.228.75", 443)
-            virtual = (uri_connect_auth1, "accounts.ea.com")
-            printer = print_it
+        # if forward_to[0] == "1.2.1.2":
+        #     print "virtual upgrade "
+        #     forward_to = ("159.153.228.75", 443)
+        #     virtual = (uri_connect_auth1, "accounts.ea.com")
+        #     printer = print_it
 
-        if forward_to[0] == "1.2.1.3":
-            print "virtual upgrade "
-            forward_to = ("159.153.228.75", 443)
-            virtual = (uri_upid, "accounts.ea.com")
-            printer = print_it
+        # if forward_to[0] == "1.2.1.3":
+        #     print "virtual upgrade "
+        #     forward_to = ("159.153.228.75", 443)
+        #     virtual = (uri_upid, "accounts.ea.com")
+        #     printer = print_it
 
-        if forward_to[0] == "1.2.1.4":
-            print "virtual upgrade "
-            forward_to = ("159.153.228.75", 443)
-            virtual = (uri_auth_mobileupid, "accounts.ea.com")
-            printer = print_it
-            if False:
-                self.input_list.append(clientsock)
-                nchannel = Channel(None, clientsock, generator=upidgen)
-                self.channel[clientsock] = nchannel
-                return
+        # if forward_to[0] == "1.2.1.4":
+        #     print "virtual upgrade "
+        #     forward_to = ("159.153.228.75", 443)
+        #     virtual = (uri_auth_mobileupid, "accounts.ea.com")
+        #     printer = print_it
+        #     if False:
+        #         self.input_list.append(clientsock)
+        #         nchannel = Channel(None, clientsock, generator=upidgen)
+        #         self.channel[clientsock] = nchannel
+        #         return
 
-        if forward_to[0] == "1.2.1.5":
-            print "virtual upgrade (gateway)"
-            forward_to = ("159.153.228.76", 443)
-            l = lambda x: "/proxy/identi" + x[1:]
-            virtual = (l, "gateway.ea.com")
+        # if forward_to[0] == "1.2.1.5":
+        #     print "virtual upgrade (gateway)"
+        #     forward_to = ("159.153.228.76", 443)
+        #     l = lambda x: "/proxy/identi" + x[1:]
+        #     virtual = (l, "gateway.ea.com")
         #all above seems never used because i nerver see the message of print!just a guess do by a newbie
-        if forward_to[1] != 9090:
+        if forward_to[1] != 8080:
             #setup a tcp socket that is connected to the server end
             forward = Forward().start(forward_to[0], forward_to[1])
         else:
             forward = None
 
-        if forward_to[0] == "159.153.244.219":
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
-        elif forward_to[0] == "31.13.71.1":
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
-        elif forward_to[0] == "159.153.228.75":
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
+        # if forward_to[0] == "159.153.244.219":
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
+        # elif forward_to[0] == "31.13.71.1":
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
+        # elif forward_to[0] == "159.153.228.75":
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
 
         #--------------------------------------------------------#
-        elif forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
-            print "upgrading to ssl!"
-            forward = ssl.wrap_socket(forward)
-            printer = print_it
+        # if forward_to[0] == "159.153.21.132":#fifa15.service.easports.com
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
 
         # elif forward_to[0] == "159.153.228.75":#fifa15.service.easports.com
         #     print "upgrading to ssl!"
         #     forward = ssl.wrap_socket(forward)
         #     printer = print_it
 
-        elif forward_to[0] == "159.153.103.28":#fifa15.service.easports.com
-            print "upgrading to ssl!"
+        # elif forward_to[0] == "159.153.103.28":#fifa15.service.easports.com
+        #     print "upgrading to ssl!"
+        #     forward = ssl.wrap_socket(forward)
+        #     printer = print_it
+        if upgrade_socket:
             forward = ssl.wrap_socket(forward)
+            print "upgrading to ssl!"
             printer = print_it
 
 
