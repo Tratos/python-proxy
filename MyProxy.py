@@ -18,21 +18,11 @@ class MyProxy(TheServer):
 		# ]
 		#Printer.print_it
 		Info_List=[
-					{"IP":"159.153.21.132","printer":Printer.print_it,"generator":None,"virtual":None},#fifa15.service.easports.com
-					{"IP":"159.153.228.75","printer":Printer.print_it,"generator":None,"virtual":None},#accounts.ea.com
-					{"IP":"159.153.103.28","printer":Printer.print_it,"generator":None,"virtual":None},#reports.tools.gos.ea.com
-					{"IP":"104.120.117.43","printer":Printer.print_it,"generator":None,"virtual":None}#fifa15.content.easports.com 
-					#"104.95.201.172"#fifa15.content.easports.com       
+					{"IP":"","printer":Printer.print_it,"generator":None,"virtual":None},#
+					{"IP":"","printer":Printer.print_it,"generator":None,"virtual":None},#
+					{"IP":"","printer":Printer.print_it,"generator":None,"virtual":None},#
+					{"IP":"","printer":Printer.print_it,"generator":None,"virtual":None}#
 				  ]
-		# ip_list_2=[
-		# 			"134.213.37.203",#utas.s2.fut.ea.com
-		# 			"104.71.136.11",
-		# 			"104.95.111.155",#static-resource.np.community.playstation.net
-		# 			"203.105.78.45",
-		# 			"23.79.178.172",
-		# 			"173.230.217.202",
-		# 			"104.71.136.11",#accounts.ea.com
-		# 			]
 		self.upgrade_socket=False
 		self.printer=None
 		self.generator=None
@@ -47,11 +37,6 @@ class MyProxy(TheServer):
 					self.virtual   = dic["virtual"]
 					self.upgrade_socket=True
 					break                   
-		# for ip in ip_list_2:
-		# 	if forward_to[0] == ip:
-		# 		self.printer =None
-		# 		self.upgrade_socket=False
-		# 		break
 
 	def on_forward(self,forward):#forward is the socket connected to the real server  
 		if self.upgrade_socket:     
