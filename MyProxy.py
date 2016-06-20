@@ -16,7 +16,7 @@ class MyProxy(TheServer):
 		# this is what in webservers is called router /static /index.html
 		# [{ip, printer, generator, virtual}...
 		# ]
-
+		#Printer.print_it
 		Info_List=[
 					{"IP":"159.153.21.132","printer":Printer.print_it,"generator":None,"virtual":None},#fifa15.service.easports.com
 					{"IP":"159.153.228.75","printer":Printer.print_it,"generator":None,"virtual":None},#accounts.ea.com
@@ -34,15 +34,17 @@ class MyProxy(TheServer):
 		# 			"104.71.136.11",#accounts.ea.com
 		# 			]
 		self.upgrade_socket=False
+		self.printer=None
+		self.generator=None
+		self.virtual=None
 		if forward_to[1] != 443:
 			for dic in Info_List:
 				if forward_to[0] == dic["IP"]:
 					print "virtual upgrade (gateway)"
-					forward_to= (forward_to[0], 443)
-					print "ok?"
-					self.printer=dic["printer"]
-					self.generator=dic["generator"]
-					self.virtual=dic["virtual"]
+					forward_to[1]  = 443
+					self.printer   = dic["printer"]
+					self.generator = dic["generator"]
+					self.virtual   = dic["virtual"]
 					self.upgrade_socket=True
 					break                   
 		# for ip in ip_list_2:
@@ -52,13 +54,15 @@ class MyProxy(TheServer):
 		# 		break
 
 	def on_forward(self,forward):#forward is the socket connected to the real server  
-		if self.upgrade_socket:    
-			forward = ssl.wrap_socket(forward)
+		if self.upgrade_socket:     
 			print "upgrading to ssl!"
+			return ssl.wrap_socket(forward)
+		else: 
+			return forward
 
 	def on_recv(self,from_socket,to_socket,data):#this mrthod can modifiy the data
+										#on the other hand it means that the ip of these which has upgrade the virtual has not came in
 		if self.virtual != None:#I haven't see the message of 'modified data' so this'if' calues maybe never matched yet I guess
-								#on the other hand it means that the ip of these which has upgrade the virtual has not came in
 			if re.match("^(GET|POST|PUT|DELETE|HEAD) .* HTTP/1.1", data):
 				k = data.split("\r\n")
 				a = k[0].split(" ")
@@ -77,7 +81,10 @@ class MyProxy(TheServer):
 			print "feeding generated data"
 			d = self.generator()
 			print d
-			to_socket=fromsocket#send back	
+			from_socket.send(d)	
+			return False#return False will not send this data to the otherend packets
+		
+		return True
 
 		
 if __name__ == '__main__':

@@ -30,7 +30,7 @@ class Forward:# create a socekt that connect to the real server
         try:
             self.forward.connect((host, port))
             return self.forward
-        except Exception, e:
+        except Exception,e:
             print e
             return False
 
@@ -59,18 +59,20 @@ class TheServer:# set a mitmproxy
 
                 try:
                     self.data = self.s.recv(buffer_size)
-                except:
+                except Exception,e:
+                    print e
                     self.on_close()
                     break
 
                 if len(self.data) == 0:
+                    print "recieve over!"
                     self.on_close()
                     break
                 else:
                     #self.s is in the list of readyinput
                     sock=self.channel[self.s].get_otherend(self.s)#get the other hand of the socket
-                    self.on_recv(from_socket=self.s,to_socket=sock,data=self.data)
-                    sock.send(self.data)
+                    if self.on_recv(from_socket=self.s,to_socket=sock,data=self.data):#if on_recv() returns true than send the data else don't
+                        sock.send(self.data)
 
     #got from pr0cks project https://github.com/n1nj4sec/pr0cks/blob/master/pr0cks.py
     def get_destipport(self, sock):
@@ -79,23 +81,23 @@ class TheServer:# set a mitmproxy
         address = "%d.%d.%d.%d" % (a1, a2, a3, a4)
         print('[+] Forwarding incoming connection from %s to %s through the proxy' % (repr(sock.getpeername()), (address, port)))
         #haha when  connected, it seems that always show this message on the screen so find where it used 
-        return (address, port)
+        return [address, port]# can't be list here I don't know why 
         
 
     def accept_connect(self):
         clientsock, clientaddr = self.server.accept()
         forward_to = self.get_destipport(clientsock)
+        #forward_to =[forward_to[0],forward_to[1]]#change the tuple to list so can modify it, not a good way
         #modify this hook so you can control the prxoy
         self.on_accept(clientsock=clientsock,forward_to=forward_to)
-
         
-        if forward_to[1] != self.port:
+        if forward_to[1] != 9090:
             #setup a tcp socket that is connected to the server end
             forward = Forward().start(forward_to[0], forward_to[1])
         else:
             forward = None
 
-        self.on_forward(forward=forward)#
+        forward = self.on_forward(forward=forward)#judge if need wrap the socket
 
         if forward:
             print clientaddr, "has connected"
@@ -113,7 +115,8 @@ class TheServer:# set a mitmproxy
         
         try:
             name = self.s.getpeername()
-        except:
+        except Exception,e:
+            print e
             name = "unknown"
         print name, "has disconnected"
 
